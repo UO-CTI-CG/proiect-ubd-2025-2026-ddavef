@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "bike-scooter-rental-fastapi"
+name = "Oradea2Wheels"
 version = "0.1.0"
 description = "A FastAPI application for bike and scooter rental management."
-authors = ["Your Name <youremail@example.com>"]
+authors = ["ddavef"]
 license = "MIT"
 
 [tool.poetry.dependencies]
