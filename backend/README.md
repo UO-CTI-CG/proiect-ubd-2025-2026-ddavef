@@ -1,4 +1,4 @@
-# Bike and Scooter Rental FastAPI
+# Oradea2Wheels
 
 ## Overview
 
