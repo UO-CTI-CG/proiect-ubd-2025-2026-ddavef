@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "bike-scooter-rental-fastapi"
+version = "0.1.0"
+description = "A FastAPI application for bike and scooter rental management."
+authors = ["Your Name <youremail@example.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+fastapi = "^0.75.0"
+uvicorn = "^0.17.0"
+sqlalchemy = "^1.4.27"
+pydantic = "^1.8.2"
+python-dotenv = "^0.19.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
