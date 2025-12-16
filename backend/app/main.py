@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from app.api.routers import rentals, users, vehicles
+from app.db.base import Base
+from app.db.session import engine
 
 app = FastAPI()
 
@@ -11,6 +14,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.on_event("startup")
+def on_startup():
+    # Ensure tables exist before serving
+    Base.metadata.create_all(bind=engine)
 
 app.include_router(rentals.router, prefix="/rentals", tags=["Rentals"])
 app.include_router(users.router, prefix="/users", tags=["Users"])

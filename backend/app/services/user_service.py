@@ -11,8 +11,9 @@ class UserService:
         db_user = User(
             username=user.username,
             email=user.email,
-            full_name=user.username,
+            full_name=user.full_name or user.username,
             hashed_password=hashed,
+            is_active=True,
         )
         db.add(db_user)
         db.commit()
