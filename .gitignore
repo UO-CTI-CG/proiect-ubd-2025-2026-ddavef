@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.dylib
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+.cache/
+.eggs/
+*.egg-info/
+.dist-info/
+build/
+dist/
+
+# Environments
+.env
+.env.*
+.venv/
+venv/
+
+# IDEs/Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node / frontend
+node_modules/
+.npm/
+.yarn/
+.pnp.*
+.parcel-cache/
+.next/
+.turbo/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Azure/other
+.azure/
