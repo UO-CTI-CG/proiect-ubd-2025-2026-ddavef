@@ -11,13 +11,23 @@ BACKEND_DIR = ROOT / "backend"
 FRONTEND_DIR = ROOT / "frontend"
 PROCESSES = []
 
+def check_paths():
+    missing = []
+    for path in (BACKEND_DIR, FRONTEND_DIR):
+        if not path.exists():
+            missing.append(str(path))
+    if missing:
+        raise FileNotFoundError(f"Missing required folders: {', '.join(missing)}")
+    
+def ensure_db():
+    from backend.scripts.init_db import init_db
+    init_db()
 
 def spawn(command, cwd):
     print(f"Launching {' '.join(command)} (cwd={cwd})")
     proc = subprocess.Popen(command, cwd=cwd)
     PROCESSES.append(proc)
     return proc
-
 
 def shutdown(*_):
     for proc in PROCESSES:
@@ -31,6 +41,9 @@ def shutdown(*_):
                 proc.kill()
 
 def main():
+    check_paths()
+    ensure_db()
+    
     backend_cmd = [
         sys.executable,
         "-m",
