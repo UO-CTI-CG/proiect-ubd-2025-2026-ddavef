@@ -52,3 +52,7 @@ yarn-error.log*
 
 # Azure/other
 .azure/
+
+# Database
+*.sqlite3
+*.db
