@@ -4,12 +4,24 @@ import signal
 import subprocess
 import sys
 import time
+import shutil
+import platform
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 BACKEND_DIR = ROOT / "backend"
 FRONTEND_DIR = ROOT / "frontend"
 PROCESSES = []
+
+def resolve_npm():
+    candidates = ["npm"]
+    if platform.system().lower().startswith("win"):
+        candidates = ["npm.cmd", "npm"]
+    for name in candidates:
+        found = shutil.which(name)
+        if found:
+            return found
+    raise FileNotFoundError("npm not found on PATH. Install Node.js or add npm to PATH.")
 
 def check_paths():
     missing = []
@@ -55,7 +67,8 @@ def main():
         "--port",
         "8000",
     ]
-    frontend_cmd = ["npm", "run", "dev", "--", "--host", "--port", "5173"]
+    npm = resolve_npm()
+    frontend_cmd = [npm, "run", "dev", "--", "--host", "--port", "5173"]
 
     signal.signal(signal.SIGINT, shutdown)
     signal.signal(signal.SIGTERM, shutdown)
