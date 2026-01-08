@@ -1,6 +1,6 @@
 from pathlib import Path
 import sys
-from urllib.parse import urlparse
+from sqlalchemy.engine import make_url
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 if str(ROOT_DIR) not in sys.path:
@@ -13,20 +13,20 @@ from app.core.config import settings
 
 from app.models import user, vehicle, rental  # noqa: F401
 
-def _sqlite_file_exists(url: str) -> bool:
-    parsed = urlparse(url)
-    if parsed.scheme.startswith("sqlite"):
-        path_str = parsed.path
-        if path_str.startswith("/"):
-            path_str = path_str[1:] if path_str.startswith("//") else path_str
-        db_path = Path(path_str)
-        return db_path.exists()
-    return False
+
+def _sqlite_path(url: str) -> Path | None:
+    parsed = make_url(url)
+    if parsed.get_backend_name() != "sqlite":
+        return None
+    return Path(parsed.database) if parsed.database else None
 
 def init_db():
     db_url = settings.DATABASE_URL
-    if _sqlite_file_exists(db_url):
-        return
+    db_path = _sqlite_path(db_url)
+    if db_path:
+        db_path.parent.mkdir(parents=True, exist_ok=True)
+        if db_path.exists():
+            return
     engine = create_engine(db_url)
     Base.metadata.create_all(bind=engine)
 
