@@ -10,8 +10,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.db.base import Base
 from app.core.config import settings
+from app.core.security import hash_password
 
 from app.models import user, vehicle, rental  # noqa: F401
+from app.models.user import User
 
 
 def _sqlite_path(url: str) -> Path | None:
@@ -26,9 +28,38 @@ def init_db():
     if db_path:
         db_path.parent.mkdir(parents=True, exist_ok=True)
         if db_path.exists():
+            # DB exists; still ensure admin user
+            engine = create_engine(db_url)
+            _ensure_admin(engine)
             return
     engine = create_engine(db_url)
     Base.metadata.create_all(bind=engine)
+    _ensure_admin(engine)
+
+
+def _ensure_admin(engine):
+    admin_email = "admin@admin.com"
+    admin_username = "admin"
+    admin_password = "adminpassword"
+    SessionLocal = sessionmaker(bind=engine)
+    session = SessionLocal()
+    try:
+        exists = session.query(User).filter(
+            (User.email == admin_email) | (User.username == admin_username)
+        ).first()
+        if exists:
+            return
+        admin_user = User(
+            username=admin_username,
+            email=admin_email,
+            full_name="Admin",
+            hashed_password=hash_password(admin_password),
+            is_active=True,
+        )
+        session.add(admin_user)
+        session.commit()
+    finally:
+        session.close()
 
 if __name__ == "__main__":
     init_db()

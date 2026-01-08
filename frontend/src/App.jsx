@@ -4,10 +4,12 @@ import HeroSection from './components/HeroSection';
 import MapPanel from './components/MapPanel';
 import VehicleGrid from './components/VehicleGrid';
 import AuthPanel from './components/AuthPanel';
+import AdminPanel from './components/AdminPanel';
 import { useTranslator } from './i18n';
 
 const apiBase = import.meta.env.VITE_API_BASE_URL || '/api';
 const TOKEN_KEY = 'o2w_token';
+const ADMIN_EMAIL = 'admin@admin.com';
 
 function App() {
   const [lang, setLang] = useState('en');
@@ -23,8 +25,11 @@ function App() {
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY) || '');
   const [user, setUser] = useState(null);
   const [showAuthPanel, setShowAuthPanel] = useState(false);
+  const [view, setView] = useState('home');
 
   const apiRoot = useMemo(() => apiBase.replace(/\/$/, ''), []);
+
+  const isAdmin = user?.email === ADMIN_EMAIL;
 
   const authorizedHeaders = useCallback(() => {
     const headers = { 'Content-Type': 'application/json' };
@@ -120,6 +125,7 @@ function App() {
     setToken('');
     setUser(null);
     setRentMessage('');
+    setView('home');
   };
 
   const handleRent = async id => {
@@ -163,41 +169,57 @@ function App() {
         user={user}
         onLogout={handleLogout}
         onShowAuth={() => setShowAuthPanel(true)}
+        onShowAdmin={() => setView('admin')}
+        onShowHome={() => setView('home')}
+        isAdminView={view === 'admin'}
+        showAdmin={isAdmin}
         t={t}
       />
-      <HeroSection t={t} />
+      {view === 'admin' && isAdmin ? (
+        <AdminPanel
+          t={t}
+          apiRoot={apiRoot}
+          token={token}
+          onSaved={fetchVehicles}
+          onBack={() => setView('home')}
+        />
+      ) : (
+        <>
+          <HeroSection t={t} />
 
-      <div className="row gy-4 mt-1">
-        <div className="col-lg-5">
-          {!user && showAuthPanel && (
-            <AuthPanel
-              t={t}
-              onLogin={handleLogin}
-              onRegister={handleRegister}
-              loading={authLoading}
-              error={authError}
-            />
-          )}
-          {rentMessage && <div className="alert alert-info">{rentMessage}</div>}
-        </div>
-        <div className="col-lg-7">
-          <MapPanel t={t} vehicles={vehicles} selectedId={selectedId} onSelect={setSelectedId} />
-        </div>
-      </div>
+          <div className="row gy-4 mt-1">
+            <div className="col-lg-5">
+              {!user && showAuthPanel && (
+                <AuthPanel
+                  t={t}
+                  onLogin={handleLogin}
+                  onRegister={handleRegister}
+                  loading={authLoading}
+                  error={authError}
+                />
+              )}
+              {rentMessage && <div className="alert alert-info">{rentMessage}</div>}
+            </div>
+            <div className="col-lg-7">
+              <MapPanel t={t} vehicles={vehicles} selectedId={selectedId} onSelect={setSelectedId} />
+            </div>
+          </div>
 
-      <div className="d-flex align-items-center justify-content-between mt-4 mb-2" id="vehicles">
-        <div>
-          <div className="section-label">{t('vehiclesTitle')}</div>
-          <h5 className="mb-0 text-white">{t('vehiclesTitle')}</h5>
-        </div>
-      </div>
-      <VehicleGrid
-        t={t}
-        vehicles={vehicles}
-        onRent={handleRent}
-        rentingId={rentingId}
-        isAuthed={!!token}
-      />
+          <div className="d-flex align-items-center justify-content-between mt-4 mb-2" id="vehicles">
+            <div>
+              <div className="section-label">{t('vehiclesTitle')}</div>
+              <h5 className="mb-0 text-white">{t('vehiclesTitle')}</h5>
+            </div>
+          </div>
+          <VehicleGrid
+            t={t}
+            vehicles={vehicles}
+            onRent={handleRent}
+            rentingId={rentingId}
+            isAuthed={!!token}
+          />
+        </>
+      )}
     </div>
   );
 }

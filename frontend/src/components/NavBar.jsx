@@ -1,10 +1,10 @@
 import LanguageSelect from './LanguageSelect';
 
-export default function NavBar({ lang, setLang, user, onLogout, onShowAuth, t }) {
+export default function NavBar({ lang, setLang, user, onLogout, onShowAuth, t, onShowAdmin, onShowHome, isAdminView, showAdmin }) {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-transparent mb-4">
       <div className="container-fluid px-0">
-        <a className="navbar-brand d-flex align-items-center gap-2" href="#home">
+        <a className="navbar-brand d-flex align-items-center gap-2" href="#home" onClick={onShowHome}>
           <div className="brand-mark" aria-hidden />
           <span className="fw-bold">{t('brand')}</span>
         </a>
@@ -15,11 +15,21 @@ export default function NavBar({ lang, setLang, user, onLogout, onShowAuth, t })
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item"><a className="nav-link" href="#home">{t('home')}</a></li>
             <li className="nav-item"><a className="nav-link" href="#vehicles">{t('vehiclesTitle')}</a></li>
+            {showAdmin && (
+              <li className="nav-item">
+                <button className="btn btn-link nav-link" type="button" onClick={onShowAdmin}>
+                  {t('adminTools')}
+                </button>
+              </li>
+            )}
           </ul>
           <div className="d-flex align-items-center gap-2">
             {user ? (
               <>
                 <span className="text-white-50 small">{t('loggedInAs')} {user.username}</span>
+                {isAdminView && (
+                  <button className="btn btn-outline-light btn-sm" onClick={onShowHome}>{t('ctaBackHome')}</button>
+                )}
                 <button className="btn btn-light" onClick={onLogout}>{t('logout')}</button>
               </>
             ) : (
