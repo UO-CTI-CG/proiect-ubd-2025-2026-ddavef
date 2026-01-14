@@ -340,8 +340,29 @@ function App() {
     );
   };
 
+  const heroTiles = [
+    {
+      title: t('tileScooters'),
+      copy: t('tileScootersCopy'),
+      img:
+        'https://images.pexels.com/photos/30716393/pexels-photo-30716393/free-photo-of-row-of-electric-scooters-parked-in-florence.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    },
+    {
+      title: t('tileBikes'),
+      copy: t('tileBikesCopy'),
+      img:
+        'https://images.pexels.com/photos/8627307/pexels-photo-8627307.jpeg',
+    },
+    {
+      title: t('tileNight'),
+      copy: t('tileNightCopy'),
+      img:
+        'https://images.pexels.com/photos/9660941/pexels-photo-9660941.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    },
+  ];
+
   return (
-    <div className="container py-4" id="home">
+    <div className="container-fluid py-4 px-lg-5" id="home">
       <NavBar
         lang={lang}
         setLang={setLang}
@@ -430,19 +451,34 @@ function App() {
           </div>
         </>
       ) : (
-        <section className="glass-card p-5 text-center">
-          <div className="section-label mb-2">{t('homeLabel')}</div>
-          <h1 className="mb-3">{t('homeUpsellTitle')}</h1>
-          <p className="lead mb-4 text-muted">{t('homeUpsellCopy')}</p>
-          <div className="d-flex justify-content-center gap-3">
-            <button className="btn btn-primary btn-lg cta-glow" onClick={() => setView('rentals')}>
-              {t('homeUpsellCta')}
-            </button>
-            <button className="btn btn-outline-light" onClick={() => setShowAuthPanel(true)}>
-              {t('loginCta')}
-            </button>
+        <>
+          <section className="glass-card p-5 text-center mb-4">
+            <div className="section-label mb-2">{t('homeLabel')}</div>
+            <h1 className="mb-3">{t('homeUpsellTitle')}</h1>
+            <p className="lead mb-4 text-muted">{t('homeUpsellCopy')}</p>
+            <div className="d-flex justify-content-center gap-3 flex-wrap">
+              <button className="btn btn-primary btn-lg cta-glow" onClick={() => setView('rentals')}>
+                {t('homeUpsellCta')}
+              </button>
+              <button className="btn btn-outline-light" onClick={() => setShowAuthPanel(true)}>
+                {t('loginCta')}
+              </button>
+            </div>
+          </section>
+
+          <div className="row g-3 mb-4">
+            {heroTiles.map(tile => (
+              <div className="col-12 col-md-4" key={tile.title}>
+                <div className="promo-card" style={{ backgroundImage: `linear-gradient(135deg, rgba(0,0,0,0.45), rgba(0,0,0,0.25)), url(${tile.img})` }}>
+                  <div className="promo-copy">
+                    <h4 className="mb-2">{tile.title}</h4>
+                    <p className="mb-0 small">{tile.copy}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-        </section>
+        </>
       )}
 
       {showAuthPanel && !user && (

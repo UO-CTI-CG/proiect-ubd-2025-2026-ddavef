@@ -83,6 +83,12 @@ export const translations = {
     rentalsLabel: 'Rentals',
     rentalsHeadline: 'Choose on the live map and start riding',
     rentalsSubhead: 'See availability, tap to rent, and watch your ride update in real time.',
+    tileScooters: 'City scooters',
+    tileScootersCopy: 'Zip through downtown with lightweight rides and instant unlocks.',
+    tileBikes: 'Comfy bikes',
+    tileBikesCopy: 'Sturdy frames, smooth gears, and racks for errands or campus runs.',
+    tileNight: 'Night-ready',
+    tileNightCopy: 'Built-in lights and reflective trims keep you visible after dark.',
   },
   ro: {
     brand: 'Oradea2Wheels',
@@ -166,6 +172,12 @@ export const translations = {
     rentalsLabel: 'Inchirieri',
     rentalsHeadline: 'Alege pe harta live si porneste cursa',
     rentalsSubhead: 'Vezi disponibilitatea, inchiriaza rapid si urmareste cursa in timp real.',
+    tileScooters: 'Trotinete urbane',
+    tileScootersCopy: 'Strecori rapid prin centru cu acces instant.',
+    tileBikes: 'Biciclete confort',
+    tileBikesCopy: 'Cadre solide, viteze line si portbagaj pentru drumuri zilnice.',
+    tileNight: 'Gata de noapte',
+    tileNightCopy: 'Lumini integrate si elemente reflectorizante pentru vizibilitate.',
   },
 };
 
