@@ -28,6 +28,36 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.55);
   border-radius: 20px;
   backdrop-filter: blur(6px);
+  color: #0f172a;
+}
+
+.glass-card h1,
+.glass-card h2,
+.glass-card h3,
+.glass-card h4,
+.glass-card h5,
+.glass-card h6,
+.glass-card p,
+.glass-card label,
+.glass-card .text-white,
+.glass-card .text-white-50,
+.glass-card .text-muted,
+.glass-card .nav-link,
+.glass-card .btn-link {
+  color: #0f172a !important;
+}
+
+.glass-card .btn-outline-light,
+.glass-card .btn-light {
+  color: #0f172a;
+  border-color: rgba(15, 23, 42, 0.2);
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.glass-card .btn-outline-light:hover,
+.glass-card .btn-light:hover {
+  background-color: rgba(15, 23, 42, 0.06);
+  color: #0a162c;
 }
 
 .topbar {
