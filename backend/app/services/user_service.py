@@ -45,6 +45,37 @@ class UserService:
         db.commit()
         return True
 
+    def update_user(self, db: Session, user: User, *, email: Optional[str], username: Optional[str], full_name: Optional[str]) -> User:
+        if email:
+            existing = db.query(User).filter(User.email == email, User.id != user.id).first()
+            if existing:
+                raise ValueError("Email already registered")
+            user.email = email
+        if username:
+            existing = db.query(User).filter(User.username == username, User.id != user.id).first()
+            if existing:
+                raise ValueError("Username already registered")
+            user.username = username
+        if full_name is not None:
+            user.full_name = full_name
+        db.add(user)
+        try:
+            db.commit()
+        except IntegrityError:
+            db.rollback()
+            raise ValueError("Conflict updating user")
+        db.refresh(user)
+        return user
+
+    def change_password(self, db: Session, user: User, current_password: str, new_password: str) -> bool:
+        if not verify_password(current_password, user.hashed_password):
+            return False
+        new_hash = hash_password(new_password)
+        db.query(User).filter(User.id == user.id).update({User.hashed_password: new_hash})
+        db.commit()
+        db.refresh(user)
+        return True
+
     def authenticate_user(self, db: Session, email: str, password: str) -> Optional[User]:
         user = self.get_user_by_email(db, email=email)
         if not user:

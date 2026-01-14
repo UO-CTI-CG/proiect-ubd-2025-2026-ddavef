@@ -1,6 +1,6 @@
 import LanguageSelect from './LanguageSelect';
 
-export default function NavBar({ lang, setLang, user, onLogout, onShowAuth, t, onShowAdmin, onShowHome, isAdminView, showAdmin }) {
+export default function NavBar({ lang, setLang, user, onLogout, onShowAuth, t, onShowAdmin, onShowHome, onShowProfile, isAdminView, isProfileView, showAdmin }) {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-transparent mb-4">
       <div className="container-fluid px-0">
@@ -27,6 +27,9 @@ export default function NavBar({ lang, setLang, user, onLogout, onShowAuth, t, o
             {user ? (
               <>
                 <span className="text-white-50 small">{t('loggedInAs')} {user.username}</span>
+                <button className={`btn btn-outline-light btn-sm ${isProfileView ? 'active' : ''}`} onClick={onShowProfile}>
+                  {t('profile')}
+                </button>
                 {isAdminView && (
                   <button className="btn btn-outline-light btn-sm" onClick={onShowHome}>{t('ctaBackHome')}</button>
                 )}

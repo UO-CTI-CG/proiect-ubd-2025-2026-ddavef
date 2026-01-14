@@ -10,7 +10,7 @@ from app.core.config import settings
 from app.core.security import create_access_token
 from app.db.session import get_db
 from app.models.user import User
-from app.schemas.user import UserCreate, UserRead
+from app.schemas.user import UserCreate, UserRead, UserUpdate, PasswordChange
 from app.services.user_service import UserService
 
 router = APIRouter()
@@ -20,6 +20,12 @@ user_service = UserService()
 def require_admin(current_user: User):
     if current_user.email != settings.ADMIN_EMAIL:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin only")
+    return current_user
+
+
+def forbid_admin_mutation(current_user: User):
+    if current_user.email == settings.ADMIN_EMAIL:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin profile cannot be changed")
     return current_user
 
 @router.post("/register", response_model=UserRead, status_code=status.HTTP_201_CREATED)
@@ -49,6 +55,39 @@ def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = D
 @router.get("/me", response_model=UserRead)
 def get_user_profile(current_user: User = Depends(get_current_user)):
     return current_user
+
+
+@router.patch("/me", response_model=UserRead)
+def update_user_profile(
+    payload: UserUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    forbid_admin_mutation(current_user)
+    try:
+        updated = user_service.update_user(
+            db,
+            current_user,
+            email=payload.email,
+            username=payload.username,
+            full_name=payload.full_name,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    return updated
+
+
+@router.post("/me/password", status_code=status.HTTP_204_NO_CONTENT)
+def change_password(
+    payload: PasswordChange,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    forbid_admin_mutation(current_user)
+    ok = user_service.change_password(db, current_user, payload.current_password, payload.new_password)
+    if not ok:
+        raise HTTPException(status_code=400, detail="Current password incorrect")
+    return None
 
 
 @router.get("/", response_model=List[UserRead])

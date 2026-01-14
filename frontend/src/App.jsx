@@ -5,6 +5,7 @@ import MapPanel from './components/MapPanel';
 import VehicleGrid from './components/VehicleGrid';
 import AuthPanel from './components/AuthPanel';
 import AdminPanel from './components/AdminPanel';
+import ProfilePanel from './components/ProfilePanel';
 import { useTranslator } from './i18n';
 
 const apiBase = import.meta.env.VITE_API_BASE_URL || '/api';
@@ -327,8 +328,10 @@ function App() {
         onLogout={handleLogout}
         onShowAuth={() => setShowAuthPanel(true)}
         onShowAdmin={() => setView('admin')}
+        onShowProfile={() => setView('profile')}
         onShowHome={() => setView('home')}
         isAdminView={view === 'admin'}
+        isProfileView={view === 'profile'}
         showAdmin={isAdmin}
         t={t}
       />
@@ -339,6 +342,18 @@ function App() {
           token={token}
           vehicles={vehicles}
           onSaved={fetchVehicles}
+          onBack={() => setView('home')}
+        />
+      ) : view === 'profile' && user ? (
+        <ProfilePanel
+          t={t}
+          user={user}
+          apiRoot={apiRoot}
+          token={token}
+          isAdmin={isAdmin}
+          onUpdated={() => {
+            fetchProfile();
+          }}
           onBack={() => setView('home')}
         />
       ) : (
