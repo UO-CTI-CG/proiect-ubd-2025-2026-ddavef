@@ -64,7 +64,7 @@ export default function NavBar({
                 {isAdminView && (
                   <button className="btn btn-outline-light btn-sm" onClick={() => { onShowHome(); closeMenu(); }}>{t('ctaBackHome')}</button>
                 )}
-                <button className="btn btn-light" onClick={() => { onLogout(); closeMenu(); }}>{t('logout')}</button>
+                <button className="btn btn-light btn-sm" onClick={() => { onLogout(); closeMenu(); }}>{t('logout')}</button>
               </>
             ) : (
               <button className="btn btn-light" onClick={() => { onShowAuth(); closeMenu(); }}>{t('loginCta')}</button>

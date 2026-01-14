@@ -55,7 +55,13 @@ export default function AuthPanel({ t, onLogin, onRegister, loading, error }) {
         {error && <div className="col-12"><div className="alert alert-danger mb-0">{error}</div></div>}
         <div className="col-12 d-flex justify-content-end">
           <button className="btn btn-primary" type="submit" disabled={loading}>
-            {loading ? t('renting') : mode === 'login' ? t('login') : t('register')}
+            {loading
+              ? mode === 'login'
+                ? t('loggingIn')
+                : t('registering')
+              : mode === 'login'
+              ? t('login')
+              : t('register')}
           </button>
         </div>
       </form>

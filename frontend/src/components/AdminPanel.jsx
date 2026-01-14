@@ -176,7 +176,7 @@ export default function AdminPanel({ t, apiRoot, token, vehicles = [], onSaved, 
         )}
         <div className="col-12 d-flex justify-content-end">
           <button className="btn btn-primary" type="submit" disabled={loading}>
-            {loading ? t('renting') : t('saveVehicle')}
+            {loading ? t('saving') : t('saveVehicle')}
           </button>
         </div>
       </form>

@@ -1,17 +1,19 @@
 import { MapContainer, TileLayer, Polygon, CircleMarker, Tooltip } from 'react-leaflet';
 
-function Legend({ t }) {
-  return (
-    <div className="d-flex gap-3 align-items-center small text-muted">
-      <span className="legend-dot scooter" /> {t('scooter')}
-      <span className="legend-dot bike" /> {t('bike')}
-      <span className="legend-dot parking" /> {t('bikeParking')}
-    </div>
-  );
-}
-
 export default function MapPanel({ t, vehicles, positions, scooterArea, parkingSpots, selectedId, onSelect }) {
   const center = [47.0465, 21.9189];
+
+  const bikesByParking = parkingSpots.reduce((acc, spot) => {
+    const bikes = vehicles.filter(v => v.vehicle_type === 'bike');
+    const names = bikes
+      .filter(b => {
+        const pos = positions[b.id];
+        return pos && pos.lat === spot.lat && pos.lng === spot.lng;
+      })
+      .map(b => b.name);
+    acc[spot.id] = names;
+    return acc;
+  }, {});
 
   return (
     <div className="glass-card p-4 h-100">
@@ -20,7 +22,6 @@ export default function MapPanel({ t, vehicles, positions, scooterArea, parkingS
           <div className="section-label">{t('mapTitle')}</div>
           <div className="text-muted small">{t('mapSubtitle')}</div>
         </div>
-        <Legend t={t} />
       </div>
       <div className="map-shell leaflet-shell" style={{ height: '420px' }}>
         <MapContainer center={center} zoom={13} scrollWheelZoom={false} className="h-100 w-100 rounded-3">
@@ -36,16 +37,20 @@ export default function MapPanel({ t, vehicles, positions, scooterArea, parkingS
             <Tooltip sticky>{t('scooterArea')}</Tooltip>
           </Polygon>
 
-          {parkingSpots.map(spot => (
-            <CircleMarker
-              key={spot.id}
-              center={[spot.lat, spot.lng]}
-              radius={7}
-              pathOptions={{ color: '#3498db', fillColor: '#3498db', fillOpacity: 0.9 }}
-            >
-              <Tooltip>{t('bikeParking')}</Tooltip>
-            </CircleMarker>
-          ))}
+          {parkingSpots.map(spot => {
+            const names = bikesByParking[spot.id] || [];
+            const label = names.length ? names.join(', ') : t('bikeParking');
+            return (
+              <CircleMarker
+                key={spot.id}
+                center={[spot.lat, spot.lng]}
+                radius={7}
+                pathOptions={{ color: '#3498db', fillColor: '#3498db', fillOpacity: 0.9 }}
+              >
+                <Tooltip>{label}</Tooltip>
+              </CircleMarker>
+            );
+          })}
 
           {vehicles.map(item => {
             const pos = positions[item.id];

@@ -34,6 +34,12 @@
   border-color: var(--btn-border);
 }
 
+.theme-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .theme-select select:focus {
   box-shadow: 0 0 0 2px var(--accent-soft);
   border-color: var(--accent);
@@ -83,6 +89,73 @@
   background-repeat: no-repeat;
   background-size: 20px 2px;
   opacity: 0.9;
+}
+
+@media (max-width: 991.98px) {
+  .navbar-themed .navbar-collapse.show {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .navbar-themed .navbar-nav {
+    gap: 6px;
+  }
+
+  .navbar-themed .nav-link {
+    width: 100%;
+    text-align: left;
+    border-radius: 10px;
+    padding: 10px 12px;
+    background: var(--btn-bg);
+    border: 1px solid var(--btn-border);
+  }
+
+  .navbar-themed .nav-link.active,
+  .navbar-themed .nav-link:hover {
+    background: var(--accent-soft);
+    color: var(--text) !important;
+  }
+
+  .navbar-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    border-top: 1px solid var(--card-border);
+    padding-top: 10px;
+  }
+
+  .navbar-actions .btn,
+  .navbar-actions .form-select {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .navbar-actions .theme-select,
+  .navbar-actions .lang-select {
+    flex: 1 1 calc(50% - 6px);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .navbar-actions .theme-select label {
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .navbar-actions .theme-select select,
+  .navbar-actions .lang-select {
+    width: 100%;
+  }
+
+  .navbar-actions .navbar-text-muted {
+    text-align: left;
+  }
 }
 :root {
   --bg-start: #eef2ff;
@@ -261,12 +334,18 @@ body {
 
 .map-shell {
   position: relative;
-  min-height: 280px;
+  min-height: 420px;
   border-radius: 14px;
   background: radial-gradient(circle at 30% 30%, var(--map-accent1), transparent 38%),
     radial-gradient(circle at 70% 70%, var(--map-accent2), transparent 38%),
     linear-gradient(135deg, var(--map-start), var(--map-end));
   overflow: hidden;
+}
+
+@media (min-width: 992px) {
+  .map-shell {
+    min-height: 560px;
+  }
 }
 
 .map-dot {
@@ -312,6 +391,16 @@ body {
   pointer-events: none;
 }
 
+.btn-animate {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.btn-animate:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  filter: brightness(1.02);
+}
+
 .auth-overlay {
   position: fixed;
   inset: 0;
@@ -328,8 +417,8 @@ body {
   border: 1px solid var(--card-border);
   border-radius: 16px;
   box-shadow: var(--card-shadow);
-  padding: 20px;
-  max-width: 420px;
+  padding: 28px;
+  max-width: 540px;
   width: 100%;
 }
 
@@ -351,6 +440,15 @@ body {
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.5));
+}
+
+.promo-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.promo-hover:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.25);
 }
 
 .promo-copy {

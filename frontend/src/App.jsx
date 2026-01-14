@@ -414,11 +414,11 @@ function App() {
               </div>
               <div className="d-flex align-items-center gap-2">
                 {!token && (
-                  <button className="btn btn-outline-light" onClick={() => setShowAuthPanel(true)}>
+                  <button className="btn btn-outline-light btn-animate" onClick={() => setShowAuthPanel(true)}>
                     {t('loginCta')}
                   </button>
                 )}
-                <button className="btn btn-primary btn-lg cta-glow" onClick={() => setView('home')}>
+                <button className="btn btn-primary btn-lg cta-glow btn-animate" onClick={() => setView('home')}>
                   {t('ctaBackHome')}
                 </button>
               </div>
@@ -428,7 +428,7 @@ function App() {
           {rentMessage && <div className="alert alert-info">{rentMessage}</div>}
 
           <div className="row gy-4">
-            <div className="col-lg-5">
+            <div className="col-lg-6 col-xl-7">
               <MapPanel
                 t={t}
                 vehicles={vehicles}
@@ -439,7 +439,7 @@ function App() {
                 onSelect={setSelectedId}
               />
             </div>
-            <div className="col-lg-7">
+            <div className="col-lg-6 col-xl-5">
               <VehicleGrid
                 t={t}
                 vehicles={vehicles}
@@ -457,11 +457,8 @@ function App() {
             <h1 className="mb-3">{t('homeUpsellTitle')}</h1>
             <p className="lead mb-4 text-muted">{t('homeUpsellCopy')}</p>
             <div className="d-flex justify-content-center gap-3 flex-wrap">
-              <button className="btn btn-primary btn-lg cta-glow" onClick={() => setView('rentals')}>
+              <button className="btn btn-primary btn-lg cta-glow btn-animate" onClick={() => setView('rentals')}>
                 {t('homeUpsellCta')}
-              </button>
-              <button className="btn btn-outline-light" onClick={() => setShowAuthPanel(true)}>
-                {t('loginCta')}
               </button>
             </div>
           </section>
@@ -469,7 +466,7 @@ function App() {
           <div className="row g-3 mb-4">
             {heroTiles.map(tile => (
               <div className="col-12 col-md-4" key={tile.title}>
-                <div className="promo-card" style={{ backgroundImage: `linear-gradient(135deg, rgba(0,0,0,0.45), rgba(0,0,0,0.25)), url(${tile.img})` }}>
+                <div className="promo-card promo-hover" style={{ backgroundImage: `linear-gradient(135deg, rgba(0,0,0,0.45), rgba(0,0,0,0.25)), url(${tile.img})` }}>
                   <div className="promo-copy">
                     <h4 className="mb-2">{tile.title}</h4>
                     <p className="mb-0 small">{tile.copy}</p>
