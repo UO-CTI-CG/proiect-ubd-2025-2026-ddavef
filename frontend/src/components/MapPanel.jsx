@@ -1,17 +1,16 @@
-import { MapContainer, TileLayer, Polygon, CircleMarker, Tooltip } from 'react-leaflet';
+import { MapContainer, TileLayer, Polygon, CircleMarker, Tooltip, Popup } from 'react-leaflet';
 
 export default function MapPanel({ t, vehicles, positions, scooterArea, parkingSpots, selectedId, onSelect }) {
   const center = [47.0465, 21.9189];
 
   const bikesByParking = parkingSpots.reduce((acc, spot) => {
-    const bikes = vehicles.filter(v => v.vehicle_type === 'bike');
-    const names = bikes
+    const bikes = vehicles
+      .filter(v => v.vehicle_type === 'bike')
       .filter(b => {
         const pos = positions[b.id];
         return pos && pos.lat === spot.lat && pos.lng === spot.lng;
-      })
-      .map(b => b.name);
-    acc[spot.id] = names;
+      });
+    acc[spot.id] = bikes;
     return acc;
   }, {});
 
@@ -38,25 +37,47 @@ export default function MapPanel({ t, vehicles, positions, scooterArea, parkingS
           </Polygon>
 
           {parkingSpots.map(spot => {
-            const names = bikesByParking[spot.id] || [];
-            const label = names.length ? names.join(', ') : t('bikeParking');
+            const bikes = bikesByParking[spot.id] || [];
+            const hasBikes = bikes.length > 0;
+            const color = hasBikes ? '#e74c3c' : '#3498db';
             return (
               <CircleMarker
                 key={spot.id}
                 center={[spot.lat, spot.lng]}
-                radius={7}
-                pathOptions={{ color: '#3498db', fillColor: '#3498db', fillOpacity: 0.9 }}
+                radius={8}
+                pathOptions={{ color, fillColor: color, fillOpacity: 0.9 }}
               >
-                <Tooltip>{label}</Tooltip>
+                <Tooltip>{t('bikeParking')}</Tooltip>
+                <Popup>
+                  <div className="small">
+                    <div className="fw-bold mb-1">{t('bikeParking')}</div>
+                    {bikes.length === 0 ? (
+                      <div className="text-body-secondary">{t('noBikesParked')}</div>
+                    ) : (
+                      <ul className="mb-0 ps-3">
+                        {bikes.map(b => (
+                          <li key={b.id} className="mb-1">
+                            <div className="fw-semibold">{b.name}</div>
+                            <div className="text-body-secondary">{t('vehicleType')}: {t(b.vehicle_type)}</div>
+                            <div className="text-body-secondary">€{b.price_per_hour?.toFixed?.(2) ?? b.price_per_hour}</div>
+                            <div className={b.available ? 'text-success' : 'text-danger'}>
+                              {b.available ? t('available') : t('unavailable')}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </Popup>
               </CircleMarker>
             );
           })}
 
           {vehicles.map(item => {
+            if (item.vehicle_type === 'bike') return null; // bikes handled via parking
             const pos = positions[item.id];
             if (!pos) return null;
-            const isBike = item.vehicle_type === 'bike';
-            const color = isBike ? '#e74c3c' : '#2ecc71';
+            const color = '#2ecc71';
             return (
               <CircleMarker
                 key={item.id}
@@ -66,6 +87,16 @@ export default function MapPanel({ t, vehicles, positions, scooterArea, parkingS
                 eventHandlers={{ click: () => onSelect(item.id) }}
               >
                 <Tooltip>{item.name}</Tooltip>
+                <Popup>
+                  <div className="small">
+                    <div className="fw-bold mb-1">{item.name}</div>
+                    <div className="text-body-secondary">{t('vehicleType')}: {t(item.vehicle_type)}</div>
+                    <div className="text-body-secondary">€{item.price_per_hour?.toFixed?.(2) ?? item.price_per_hour}</div>
+                    <div className={item.available ? 'text-success' : 'text-danger'}>
+                      {item.available ? t('available') : t('unavailable')}
+                    </div>
+                  </div>
+                </Popup>
               </CircleMarker>
             );
           })}
