@@ -24,5 +24,4 @@ class UserInDB(User):
 
 
 class UserRead(User):
-    """Public representation returned by API responses."""
     pass

@@ -12,7 +12,7 @@ from app.db.base import Base
 from app.core.config import settings
 from app.core.security import hash_password
 
-from app.models import user, vehicle, rental  # noqa: F401
+from app.models import user, vehicle, rental
 from app.models.user import User
 
 
@@ -28,7 +28,6 @@ def init_db():
     if db_path:
         db_path.parent.mkdir(parents=True, exist_ok=True)
         if db_path.exists():
-            # DB exists; still ensure admin user
             engine = create_engine(db_url)
             _ensure_admin(engine)
             return
@@ -38,9 +37,9 @@ def init_db():
 
 
 def _ensure_admin(engine):
-    admin_email = "admin@admin.com"
-    admin_username = "admin"
-    admin_password = "adminpassword"
+    admin_email = settings.ADMIN_EMAIL
+    admin_username = settings.ADMIN_USERNAME
+    admin_password = settings.ADMIN_PASSWORD
     SessionLocal = sessionmaker(bind=engine)
     session = SessionLocal()
     try:

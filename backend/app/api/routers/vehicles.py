@@ -4,6 +4,7 @@ from fastapi import APIRouter, HTTPException, Depends, status
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import get_current_user
+from app.core.config import settings
 from app.db.session import get_db
 from app.schemas.vehicle import VehicleCreate, VehicleUpdate, Vehicle
 from app.services.vehicle_service import VehicleService
@@ -11,6 +12,12 @@ from app.models.user import User
 
 router = APIRouter()
 vehicle_service = VehicleService()
+
+
+def require_admin(current_user: User):
+    if current_user.email != settings.ADMIN_EMAIL:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin only")
+    return current_user
 
 
 @router.get("/", response_model=List[Vehicle])
@@ -24,6 +31,7 @@ def create_vehicle(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    require_admin(current_user)
     return vehicle_service.create_vehicle(db=db, vehicle=vehicle)
 
 
@@ -42,6 +50,7 @@ def update_vehicle(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    require_admin(current_user)
     updated_vehicle = vehicle_service.update_vehicle(db=db, vehicle_id=vehicle_id, vehicle=vehicle)
     if not updated_vehicle:
         raise HTTPException(status_code=404, detail="Vehicle not found")
@@ -54,6 +63,7 @@ def delete_vehicle(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    require_admin(current_user)
     success = vehicle_service.delete_vehicle(db=db, vehicle_id=vehicle_id)
     if not success:
         raise HTTPException(status_code=404, detail="Vehicle not found")

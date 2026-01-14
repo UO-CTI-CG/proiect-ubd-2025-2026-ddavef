@@ -34,6 +34,17 @@ class UserService:
     def get_user_by_id(self, db: Session, user_id: int) -> Optional[User]:
         return db.query(User).filter(User.id == user_id).first()
 
+    def get_all_users(self, db: Session):
+        return db.query(User).all()
+
+    def delete_user(self, db: Session, user_id: int) -> bool:
+        user = self.get_user_by_id(db, user_id)
+        if not user:
+            return False
+        db.delete(user)
+        db.commit()
+        return True
+
     def authenticate_user(self, db: Session, email: str, password: str) -> Optional[User]:
         user = self.get_user_by_email(db, email=email)
         if not user:

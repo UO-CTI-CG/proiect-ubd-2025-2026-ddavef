@@ -23,7 +23,6 @@ def create_rental(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    # Tie rental to authenticated user to prevent spoofing user_id
     rental.user_id = current_user.id
     return rental_service.create_rental(db=db, rental=rental)
 

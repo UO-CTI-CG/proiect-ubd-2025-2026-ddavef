@@ -183,7 +183,7 @@ function App() {
       setVehicles(data);
       ensurePositions(data);
     }
-  }, [apiRoot]);
+  }, [apiRoot, ensurePositions]);
 
   const fetchProfile = useCallback(async () => {
     if (!token) return;
@@ -337,6 +337,7 @@ function App() {
           t={t}
           apiRoot={apiRoot}
           token={token}
+          vehicles={vehicles}
           onSaved={fetchVehicles}
           onBack={() => setView('home')}
         />

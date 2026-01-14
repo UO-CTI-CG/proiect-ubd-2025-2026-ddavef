@@ -18,7 +18,6 @@ app.add_middleware(
 
 @app.on_event("startup")
 def on_startup():
-    # Ensure tables exist before serving
     Base.metadata.create_all(bind=engine)
 
 app.include_router(rentals.router, prefix="/rentals", tags=["Rentals"])
