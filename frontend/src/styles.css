@@ -18,6 +18,21 @@
   background-color: var(--btn-bg);
 }
 
+.nav-btn {
+  border-color: var(--btn-border) !important;
+  background-color: var(--btn-bg) !important;
+  color: var(--text) !important;
+  border-radius: 999px;
+  padding-inline: 14px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+  background-color: rgba(124, 58, 237, 0.12) !important;
+  border-color: var(--accent) !important;
+}
+
 .navbar-actions .btn-outline-light:hover,
 .navbar-actions .btn-light:hover {
   background-color: rgba(15, 23, 42, 0.08);
@@ -49,6 +64,53 @@
   background: var(--card-bg);
   color: var(--text);
   border-color: var(--btn-border);
+}
+
+.lang-select-wrapper {
+  background: var(--card-bg);
+  border: 1px solid var(--btn-border);
+  border-radius: 10px;
+  padding: 4px 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.picker-shell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--btn-border);
+  border-radius: 10px;
+  padding: 4px 10px;
+  position: relative;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.picker-shell select,
+.picker-shell .lang-select {
+  appearance: none;
+  padding: 8px 42px 8px 12px;
+  background: var(--card-bg);
+  color: var(--text);
+  border: 1px solid var(--btn-border);
+  border-radius: 8px;
+  box-shadow: none;
+  min-height: 38px;
+  line-height: 1.35;
+}
+
+.picker-shell::after {
+  content: '';
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border: 2px solid var(--text);
+  border-top: 0;
+  border-left: 0;
+  transform: translateY(-50%) rotate(45deg);
+  pointer-events: none;
 }
 
 .lang-select:focus {
@@ -137,10 +199,14 @@
 
   .navbar-actions .theme-select,
   .navbar-actions .lang-select {
-    flex: 1 1 calc(50% - 6px);
+    flex: 1 1 calc(50% - 8px);
     display: inline-flex;
     align-items: center;
     gap: 8px;
+  }
+
+  .navbar-actions .picker-shell {
+    width: calc(50% - 8px);
   }
 
   .navbar-actions .theme-select label {

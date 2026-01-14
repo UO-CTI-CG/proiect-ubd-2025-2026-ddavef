@@ -58,19 +58,19 @@ export default function NavBar({
             {user ? (
               <>
                 <span className="small navbar-text-muted">{t('loggedInAs')} {user.username}</span>
-                <button className={`btn btn-outline-light btn-sm ${isProfileView ? 'active' : ''}`} onClick={() => { onShowProfile(); closeMenu(); }}>
+                <button className={`btn nav-btn btn-sm ${isProfileView ? 'active' : ''}`} onClick={() => { onShowProfile(); closeMenu(); }}>
                   {t('profile')}
                 </button>
                 {isAdminView && (
-                  <button className="btn btn-outline-light btn-sm" onClick={() => { onShowHome(); closeMenu(); }}>{t('ctaBackHome')}</button>
+                  <button className="btn nav-btn btn-sm" onClick={() => { onShowHome(); closeMenu(); }}>{t('ctaBackHome')}</button>
                 )}
-                <button className="btn btn-light btn-sm" onClick={() => { onLogout(); closeMenu(); }}>{t('logout')}</button>
+                <button className="btn nav-btn btn-sm" onClick={() => { onLogout(); closeMenu(); }}>{t('logout')}</button>
               </>
             ) : (
-              <button className="btn btn-light" onClick={() => { onShowAuth(); closeMenu(); }}>{t('loginCta')}</button>
+              <button className="btn nav-btn" onClick={() => { onShowAuth(); closeMenu(); }}>{t('loginCta')}</button>
             )}
-            <div className="d-flex align-items-center gap-2 theme-select">
-              <label className="small mb-0 navbar-text-muted">{t('theme')}</label>
+            <div className="picker-shell theme-select">
+              <span aria-hidden>🌓</span>
               <select
                 className="form-select form-select-sm"
                 style={{ width: 120 }}
@@ -82,7 +82,10 @@ export default function NavBar({
                 <option value="auto">{t('themeAuto')}</option>
               </select>
             </div>
-            <LanguageSelect lang={lang} setLang={setLang} />
+            <div className="picker-shell lang-select-wrapper">
+              <span aria-hidden>🌐</span>
+              <LanguageSelect lang={lang} setLang={setLang} />
+            </div>
           </div>
         </div>
       </div>
