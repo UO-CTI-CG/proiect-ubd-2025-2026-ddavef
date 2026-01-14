@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import NavBar from './components/NavBar';
-import HeroSection from './components/HeroSection';
 import MapPanel from './components/MapPanel';
 import VehicleGrid from './components/VehicleGrid';
 import AuthPanel from './components/AuthPanel';
@@ -352,13 +351,16 @@ function App() {
         onShowAdmin={() => setView('admin')}
         onShowProfile={() => setView('profile')}
         onShowHome={() => setView('home')}
+        onShowRentals={() => setView('rentals')}
         isAdminView={view === 'admin'}
         isProfileView={view === 'profile'}
+        isRentalsView={view === 'rentals'}
         showAdmin={isAdmin}
         themeMode={themeMode}
         onThemeChange={setThemeMode}
         t={t}
       />
+
       {view === 'admin' && isAdmin ? (
         <AdminPanel
           t={t}
@@ -380,24 +382,32 @@ function App() {
           }}
           onBack={() => setView('home')}
         />
-      ) : (
+      ) : view === 'rentals' ? (
         <>
-          <HeroSection t={t} />
-
-          <div className="row gy-4 mt-1">
-            <div className="col-lg-5">
-              {!user && showAuthPanel && (
-                <AuthPanel
-                  t={t}
-                  onLogin={handleLogin}
-                  onRegister={handleRegister}
-                  loading={authLoading}
-                  error={authError}
-                />
-              )}
-              {rentMessage && <div className="alert alert-info">{rentMessage}</div>}
+          <section className="glass-card p-4 mb-4">
+            <div className="d-flex align-items-start justify-content-between flex-wrap gap-3">
+              <div>
+                <div className="section-label">{t('rentalsLabel')}</div>
+                <h2 className="mb-2">{t('rentalsHeadline')}</h2>
+                <p className="mb-0 text-muted">{t('rentalsSubhead')}</p>
+              </div>
+              <div className="d-flex align-items-center gap-2">
+                {!token && (
+                  <button className="btn btn-outline-light" onClick={() => setShowAuthPanel(true)}>
+                    {t('loginCta')}
+                  </button>
+                )}
+                <button className="btn btn-primary btn-lg cta-glow" onClick={() => setView('home')}>
+                  {t('ctaBackHome')}
+                </button>
+              </div>
             </div>
-            <div className="col-lg-7">
+          </section>
+
+          {rentMessage && <div className="alert alert-info">{rentMessage}</div>}
+
+          <div className="row gy-4">
+            <div className="col-lg-5">
               <MapPanel
                 t={t}
                 vehicles={vehicles}
@@ -408,22 +418,49 @@ function App() {
                 onSelect={setSelectedId}
               />
             </div>
-          </div>
-
-          <div className="d-flex align-items-center justify-content-between mt-4 mb-2" id="vehicles">
-            <div>
-              <div className="section-label">{t('vehiclesTitle')}</div>
-              <h5 className="mb-0 themed-heading">{t('vehiclesTitle')}</h5>
+            <div className="col-lg-7">
+              <VehicleGrid
+                t={t}
+                vehicles={vehicles}
+                onRent={handleRent}
+                rentingId={rentingId}
+                isAuthed={!!token}
+              />
             </div>
           </div>
-          <VehicleGrid
-            t={t}
-            vehicles={vehicles}
-            onRent={handleRent}
-            rentingId={rentingId}
-            isAuthed={!!token}
-          />
         </>
+      ) : (
+        <section className="glass-card p-5 text-center">
+          <div className="section-label mb-2">{t('homeLabel')}</div>
+          <h1 className="mb-3">{t('homeUpsellTitle')}</h1>
+          <p className="lead mb-4 text-muted">{t('homeUpsellCopy')}</p>
+          <div className="d-flex justify-content-center gap-3">
+            <button className="btn btn-primary btn-lg cta-glow" onClick={() => setView('rentals')}>
+              {t('homeUpsellCta')}
+            </button>
+            <button className="btn btn-outline-light" onClick={() => setShowAuthPanel(true)}>
+              {t('loginCta')}
+            </button>
+          </div>
+        </section>
+      )}
+
+      {showAuthPanel && !user && (
+        <div className="auth-overlay" onClick={() => setShowAuthPanel(false)}>
+          <div className="auth-modal" onClick={e => e.stopPropagation()}>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h5 className="mb-0">{t('loginCta')}</h5>
+              <button type="button" className="btn-close" aria-label="Close" onClick={() => setShowAuthPanel(false)} />
+            </div>
+            <AuthPanel
+              t={t}
+              onLogin={handleLogin}
+              onRegister={handleRegister}
+              loading={authLoading}
+              error={authError}
+            />
+          </div>
+        </div>
       )}
     </div>
   );

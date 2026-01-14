@@ -9,9 +9,11 @@ export default function NavBar({
   t,
   onShowAdmin,
   onShowHome,
+  onShowRentals,
   onShowProfile,
   isAdminView,
   isProfileView,
+  isRentalsView,
   showAdmin,
   themeMode,
   onThemeChange,
@@ -28,8 +30,16 @@ export default function NavBar({
         </button>
         <div className="collapse navbar-collapse" id="mainNav">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item"><a className="nav-link" href="#home">{t('home')}</a></li>
-            <li className="nav-item"><a className="nav-link" href="#vehicles">{t('vehiclesTitle')}</a></li>
+            <li className="nav-item">
+              <button className={`btn btn-link nav-link ${!isRentalsView && !isAdminView && !isProfileView ? 'active' : ''}`} type="button" onClick={onShowHome}>
+                {t('home')}
+              </button>
+            </li>
+            <li className="nav-item">
+              <button className={`btn btn-link nav-link ${isRentalsView ? 'active' : ''}`} type="button" onClick={onShowRentals}>
+                {t('rentalsNav')}
+              </button>
+            </li>
             {showAdmin && (
               <li className="nav-item">
                 <button className="btn btn-link nav-link" type="button" onClick={onShowAdmin}>
