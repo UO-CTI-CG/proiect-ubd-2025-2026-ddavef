@@ -11,6 +11,7 @@ import { useTranslator } from './i18n';
 const apiBase = import.meta.env.VITE_API_BASE_URL || '/api';
 const TOKEN_KEY = 'o2w_token';
 const ADMIN_EMAIL = 'admin@admin.com';
+const THEME_KEY = 'o2w_theme';
 
 const GRAPH_NODES = {
   central: { lat: 47.0525, lng: 21.93 },
@@ -71,6 +72,8 @@ function App() {
   const [user, setUser] = useState(null);
   const [showAuthPanel, setShowAuthPanel] = useState(false);
   const [view, setView] = useState('home');
+  const [themeMode, setThemeMode] = useState(() => localStorage.getItem(THEME_KEY) || 'auto');
+  const [resolvedTheme, setResolvedTheme] = useState('light');
 
   const apiRoot = useMemo(() => apiBase.replace(/\/$/, ''), []);
 
@@ -269,6 +272,25 @@ function App() {
     setView('home');
   };
 
+  useEffect(() => {
+    localStorage.setItem(THEME_KEY, themeMode);
+  }, [themeMode]);
+
+  useEffect(() => {
+    const mql = window.matchMedia('(prefers-color-scheme: dark)');
+    const apply = (mode, match) => {
+      const finalTheme = mode === 'auto' ? (match ? 'dark' : 'light') : mode;
+      setResolvedTheme(finalTheme);
+      document.documentElement.setAttribute('data-theme', finalTheme);
+    };
+    apply(themeMode, mql.matches);
+    const handler = e => {
+      if (themeMode === 'auto') apply('auto', e.matches);
+    };
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, [themeMode]);
+
   const handleRent = async id => {
     if (!token) {
       setRentMessage(t('rentRequiresLogin'));
@@ -333,6 +355,8 @@ function App() {
         isAdminView={view === 'admin'}
         isProfileView={view === 'profile'}
         showAdmin={isAdmin}
+        themeMode={themeMode}
+        onThemeChange={setThemeMode}
         t={t}
       />
       {view === 'admin' && isAdmin ? (
@@ -389,7 +413,7 @@ function App() {
           <div className="d-flex align-items-center justify-content-between mt-4 mb-2" id="vehicles">
             <div>
               <div className="section-label">{t('vehiclesTitle')}</div>
-              <h5 className="mb-0 text-white">{t('vehiclesTitle')}</h5>
+              <h5 className="mb-0 themed-heading">{t('vehiclesTitle')}</h5>
             </div>
           </div>
           <VehicleGrid

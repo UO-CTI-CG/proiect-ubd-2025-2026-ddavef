@@ -1,8 +1,23 @@
 import LanguageSelect from './LanguageSelect';
 
-export default function NavBar({ lang, setLang, user, onLogout, onShowAuth, t, onShowAdmin, onShowHome, onShowProfile, isAdminView, isProfileView, showAdmin }) {
+export default function NavBar({
+  lang,
+  setLang,
+  user,
+  onLogout,
+  onShowAuth,
+  t,
+  onShowAdmin,
+  onShowHome,
+  onShowProfile,
+  isAdminView,
+  isProfileView,
+  showAdmin,
+  themeMode,
+  onThemeChange,
+}) {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-transparent mb-4">
+    <nav className="navbar navbar-expand-lg bg-transparent mb-4 topbar-shell navbar-themed">
       <div className="container-fluid px-0">
         <a className="navbar-brand d-flex align-items-center gap-2" href="#home" onClick={onShowHome}>
           <div className="brand-mark" aria-hidden />
@@ -23,10 +38,10 @@ export default function NavBar({ lang, setLang, user, onLogout, onShowAuth, t, o
               </li>
             )}
           </ul>
-          <div className="d-flex align-items-center gap-2">
+          <div className="d-flex align-items-center gap-2 navbar-actions">
             {user ? (
               <>
-                <span className="text-white-50 small">{t('loggedInAs')} {user.username}</span>
+                <span className="small navbar-text-muted">{t('loggedInAs')} {user.username}</span>
                 <button className={`btn btn-outline-light btn-sm ${isProfileView ? 'active' : ''}`} onClick={onShowProfile}>
                   {t('profile')}
                 </button>
@@ -38,6 +53,19 @@ export default function NavBar({ lang, setLang, user, onLogout, onShowAuth, t, o
             ) : (
               <button className="btn btn-light" onClick={onShowAuth}>{t('loginCta')}</button>
             )}
+            <div className="d-flex align-items-center gap-2 theme-select">
+              <label className="small mb-0 navbar-text-muted">{t('theme')}</label>
+              <select
+                className="form-select form-select-sm"
+                style={{ width: 120 }}
+                value={themeMode}
+                onChange={e => onThemeChange?.(e.target.value)}
+              >
+                <option value="light">{t('themeLight')}</option>
+                <option value="dark">{t('themeDark')}</option>
+                <option value="auto">{t('themeAuto')}</option>
+              </select>
+            </div>
             <LanguageSelect lang={lang} setLang={setLang} />
           </div>
         </div>

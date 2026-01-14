@@ -71,6 +71,10 @@ export const translations = {
     profileError: 'Update failed.',
     profile: 'Profile',
     adminProfileLocked: 'Admin profile cannot be changed.',
+    theme: 'Theme',
+    themeLight: 'Light',
+    themeDark: 'Dark',
+    themeAuto: 'Auto',
   },
   ro: {
     brand: 'Oradea2Wheels',
@@ -142,6 +146,10 @@ export const translations = {
     profileError: 'Actualizarea a esuat.',
     profile: 'Profil',
     adminProfileLocked: 'Profilul admin nu poate fi schimbat.',
+    theme: 'Tema',
+    themeLight: 'Luminoasa',
+    themeDark: 'Intunecata',
+    themeAuto: 'Auto',
   },
 };
 
