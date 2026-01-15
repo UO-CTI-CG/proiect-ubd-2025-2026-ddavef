@@ -75,14 +75,12 @@ def main():
     atexit.register(shutdown)
 
     spawn(backend_cmd, BACKEND_DIR)
-    # Small stagger so the API starts before the UI probes it.
     time.sleep(1)
     spawn(frontend_cmd, FRONTEND_DIR)
 
     print("Backend: http://localhost:8000")
     print("Frontend: http://localhost:5173")
 
-    # Keep the parent alive while children run.
     try:
         while any(proc.poll() is None for proc in PROCESSES):
             time.sleep(0.5)
