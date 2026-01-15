@@ -126,7 +126,6 @@ function App() {
   };
 
   const randomPointInPolygon = poly => {
-    // Simple bounding-box rejection sampling for the polygon.
     const lats = poly.map(p => p.lat);
     const lngs = poly.map(p => p.lng);
     const minLat = Math.min(...lats);

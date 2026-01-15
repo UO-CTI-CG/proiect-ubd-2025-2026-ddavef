@@ -74,7 +74,7 @@ export default function MapPanel({ t, vehicles, positions, scooterArea, parkingS
           })}
 
           {vehicles.map(item => {
-            if (item.vehicle_type === 'bike') return null; // bikes handled via parking
+            if (item.vehicle_type === 'bike') return null;
             const pos = positions[item.id];
             if (!pos) return null;
             const color = '#2ecc71';
